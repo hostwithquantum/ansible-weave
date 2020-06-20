@@ -27,11 +27,9 @@ Including an example of how to use your role (for instance, with variables passe
     - hosts: servers
       roles:
         - role: ansible-weave
+          become: true
           vars:
-            weave_host:
-              - host1
-              - host2
-              - host3
+            weave_inventory_group: servers
             weave_password: "abc"
 
 License

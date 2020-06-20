@@ -1,6 +1,20 @@
 ---
+# disable checkpoint: 1
+weave_checkpoint_disable: 0
+
+# --dns-domain
+weave_dns_domain: "weave.local."
+
+# --dns-ttl
+weave_dns_ttl: 30
+
 # hosts part of the network
-weave_hosts: []
+weave_inventory_group: "weave"
+
+# --ipalloc-range
+weave_ipalloc_range: ""
 
 # the password enables encryption between hosts
 weave_password: ""
+
+weave_version: 2.6.5

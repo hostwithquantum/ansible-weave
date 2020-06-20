@@ -1,2 +1,4 @@
 ---
-# vars file for ansible-weave
+__weave_command:
+  - "/usr/local/bin/weave launch --no-restart $PEERS"
+  - "--dns-ttl={{ weave_dns_ttl }}"

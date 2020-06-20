@@ -1,17 +1,24 @@
 ---
-# tasks file for ansible-weave
+- name: Is weave already installed?
+  stat:
+    path: /usr/local/bin/weave
+  register: weave_exists
+
+- name: Checks
+  include_tasks: preflight.yml
+  when: weave_exists.stat.exists
+
+- name: Skip download if we can
+  block:
+    - name: Download weave
+      get_url:
+        url: "https://github.com/weaveworks/weave/releases/download/v{{ weave_version }}/weave"
+        dest: "/tmp/weave-{{ weave_version }}"
+        mode: 0755
+  when: (weave_exist.stat.exists and weave_version.stdout_lines != weave_version) or
+        (not weave_exist.stat.exists)
 
 # sudo semanage fcontext -a -t unconfined_exec_t -f f /usr/local/bin/weave
 # sudo restorecon /usr/local/bin/weave
 
-- name: Install service configuration
-  template:
-    src: sysconfig-weave.j2
-    dest: /etc/sysconfig/weave
-  notify: restart weave
-
-- name: Install systemd service
-  file:
-    src: weave.service
-    dest: /etc/systemd/system/weave.service
-  notify: enable weave
+- include_tasks: service.yml

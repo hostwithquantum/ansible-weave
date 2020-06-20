@@ -1,0 +1,9 @@
+---
+- name: Get version
+  command: /usr/local/bin/weave -v
+  register: weave_version
+  changed_when: True
+
+- name: Show version
+  debug:
+    var: weave_version.stdout_lines

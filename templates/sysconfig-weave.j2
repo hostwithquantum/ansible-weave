@@ -1,2 +1,5 @@
+{% if weave_checkpoint_disable == 1 -%}
+CHECKPOINT_DISABLE=1
+{% endif -%}
 WEAVE_PASSWORD="{{ weave_password }}"
 PEERS="{{ weave_hosts | join(' ') }"
