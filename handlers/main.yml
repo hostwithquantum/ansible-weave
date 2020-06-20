@@ -1,2 +1,12 @@
 ---
-# handlers file for ansible-weave
+- name: Enable weave
+  systemd:
+    name: weave
+    daemon_reload: True
+    enabled: True
+    state: started
+
+- name: Restart weave
+  systemd:
+    name: weave
+    state: restarted
