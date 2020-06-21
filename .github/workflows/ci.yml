@@ -1,19 +1,18 @@
-name: ansible-lint
-
+---
 on:
-  - push
+  pull_request:
+
+name: ci
 
 jobs:
-  build:
+  molecule:
     runs-on: ubuntu-latest
     steps:
-      - name: checkout
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
         with:
           path: "${{ github.repository }}"
-      - name: molecule
+      - name: molecule test
         uses: robertdebock/molecule-action@2.3.4
         with:
           image: centos
           tag: 7
-          command: lint

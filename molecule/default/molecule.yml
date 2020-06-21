@@ -26,6 +26,9 @@ platforms:
       - weave
 provisioner:
   name: ansible
+  options:
+    diff: true
+    v: true
   inventory:
     host_vars:
       node1:
@@ -40,9 +43,11 @@ provisioner:
           - "--log-level=debug"
           - "--dns-domain=\"mesh.local.\""
           - "--dns-ttl=10"
-  # lint:
-  #  name: ansible-lint
+  lint:
+    name: ansible-lint
 verifier:
   name: testinfra
+  options:
+    vvv: true
   lint:
     name: flake8
