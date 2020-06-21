@@ -1,2 +1,25 @@
 ---
-# defaults file for ansible-weave
+# disable checkpoint (= phone home, version check): 1
+weave_checkpoint_disable: 0
+
+# hostgroup for nodes part of this network
+weave_inventory_group: "weave"
+
+# the password enables encryption between hosts
+weave_password: ""
+
+# pass a list of additional arguments to weave launch
+weave_launch_args: []
+# - "--dns-domain=\"weave.local.\""
+# - "--dns-ttl=30"
+# - "--ipalloc-range=CIDR"
+# - "--host=0.0.0.0"
+# - "--name=something-unique"
+# - "--nickname=hostname"
+# - "--log-level=debug|info|warning|error"
+# - "--token <weave-cloud-service-token>"
+# - "--metrics-addr=X.X.X.X:PORT"
+
+weave_state: restarted
+
+weave_version: 2.6.5

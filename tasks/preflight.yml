@@ -1,0 +1,13 @@
+---
+- name: Get version
+  command: /usr/local/bin/weave version
+  register: __version_output
+  changed_when: False
+
+- name: Set version fact
+  set_fact:
+    __weave_version: "{{ __version_output.stdout_lines[1].split(' ')[1] }}"
+
+# - name: Show version
+#   debug:
+#     var: __weave_version

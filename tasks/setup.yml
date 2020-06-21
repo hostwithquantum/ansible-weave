@@ -1,0 +1,31 @@
+---
+- name: Install weave
+  copy:
+    src: /tmp/weave
+    dest: /usr/local/bin/weave
+    mode: 0755
+    remote_src: True
+  when: not weave_exists.stat.exists
+
+- name: Update weave
+  block:
+    - name: Update local images
+      command: /tmp/weave setup
+      changed_when: True
+    - name: Stop weave
+      systemd:
+        name: weave
+        state: stopped
+    - name: Install new version of weave
+      copy:
+        src: /tmp/weave
+        dest: /usr/local/bin/weave
+        mode: 0755
+        remote_src: True
+    - name: Start weave
+      systemd:
+        name: weave
+        state: started
+  when:
+    - weave_exists.stat.exists
+    - __weave_version != weave_version

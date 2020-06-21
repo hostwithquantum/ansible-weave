@@ -1,2 +1,20 @@
 ---
-# tasks file for ansible-weave
+- name: Is weave already installed?
+  stat:
+    path: /usr/local/bin/weave
+  register: weave_exists
+
+- name: Checks
+  include_tasks: preflight.yml
+  when: weave_exists.stat.exists
+
+- name: Download weave
+  include_tasks: download.yml
+
+- name: Setup weave (install or update)
+  include_tasks: setup.yml
+
+# sudo semanage fcontext -a -t unconfined_exec_t -f f /usr/local/bin/weave
+# sudo restorecon /usr/local/bin/weave
+
+- include_tasks: service.yml
