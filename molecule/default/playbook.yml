@@ -1,0 +1,7 @@
+---
+- name: Converge
+  hosts: weave
+  gather_facts: True
+  gather_subset: network
+  roles:
+    - role: ansible-weave

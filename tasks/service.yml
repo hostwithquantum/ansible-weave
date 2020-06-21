@@ -1,21 +1,37 @@
 ---
+# - name: "Show current node group"
+#   debug:
+#     var: __weave_node
+
+# - name: "Show all in group '{{ weave_inventory_group }}'"
+#   debug:
+#     var: __weave_group
+
+- name: Launch args
+  debug:
+    var: weave_launch_args
+
 - name: Create peers
   set_fact:
-    __weave_peers: "{{ [inventory_hostname] | difference(groups[weave_inventory_group]) }}"
+    __weave_peers: "{{ __weave_group | difference(__weave_node) | list }}"
+
+# - name: "Show peers of host '{{ inventory_hostname }}'"
+#   debug:
+#     msg: "{{ __weave_peers }}"
+
+- name: Get IPs from inventory
+  set_fact:
+    __weave_peers_resolved: "{{ __weave_peers_resolved + [ hostvars[item]['ansible_default_ipv4']['address'] ] }}"
+  loop: "{{ __weave_peers }}"
+
+- name: Install systemd service
+  template:
+    src: templates/weave.service.j2
+    dest: /etc/systemd/system/weave.service
+  notify: enable weave
 
 - name: Install service configuration
   template:
-    src: sysconfig-weave.j2
+    src: templates/sysconfig-weave.j2
     dest: /etc/sysconfig/weave
   notify: restart weave
-
-- name: Add --ipalloc-range (if set)
-  set_fact:
-    __weave_command: "{{ __weave_command + [ weave_ipalloc_range ] }}"
-  when: weave_ipalloc_range | length > 0
-
-- name: Install systemd service
-  file:
-    src: weave.service
-    dest: /etc/systemd/system/weave.service
-  notify: enable weave

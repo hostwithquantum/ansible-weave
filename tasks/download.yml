@@ -1,0 +1,10 @@
+---
+- name: Skip download if we can
+  block:
+    - name: Download weave
+      get_url:
+        url: "https://github.com/weaveworks/weave/releases/download/v{{ weave_version }}/weave"
+        dest: /tmp/weave
+        mode: 0755
+  when: (weave_exists.stat.exists and __weave_version != weave_version) or
+        (not weave_exists.stat.exists)

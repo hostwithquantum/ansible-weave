@@ -1,4 +1,15 @@
 ---
-__weave_command:
-  - "/usr/local/bin/weave launch --no-restart $PEERS"
-  - "--dns-ttl={{ weave_dns_ttl }}"
+# base command: includes --no-restart because of systemd
+__weave_base:
+  - "/usr/local/bin/weave launch"
+  - "--no-restart"
+  - "--nickname={{ inventory_hostname }}"
+
+# merge base and supplied args
+__weave_command: "{{ __weave_base + weave_launch_args }}"
+
+# this is my poor attempt to find peers for weave
+__weave_group: "{{ groups[weave_inventory_group] }}"
+__weave_node:
+  - "{{ inventory_hostname }}"
+__weave_peers_resolved: []

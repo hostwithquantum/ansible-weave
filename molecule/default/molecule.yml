@@ -1,0 +1,48 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+lint:
+  name: yamllint
+platforms:
+  - name: node1
+    image: geerlingguy/docker-centos7-ansible:latest
+    pre_build_image: True
+    command: /sbin/init
+    privileged: true
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    groups:
+      - weave
+  - name: node2
+    image: geerlingguy/docker-centos7-ansible:latest
+    pre_build_image: True
+    command: /sbin/init
+    privileged: true
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    groups:
+      - weave
+provisioner:
+  name: ansible
+  inventory:
+    host_vars:
+      node1:
+        weave_launch_args:
+          - "--name=::1"
+          - "--log-level=debug"
+          - "--dns-domain=\"mesh.local.\""
+          - "--dns-ttl=10"
+      node2:
+        weave_launch_args:
+          - "--name=::2"
+          - "--log-level=debug"
+          - "--dns-domain=\"mesh.local.\""
+          - "--dns-ttl=10"
+  # lint:
+  #  name: ansible-lint
+verifier:
+  name: testinfra
+  lint:
+    name: flake8

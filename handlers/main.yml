@@ -1,12 +1,11 @@
 ---
-- name: Enable weave
+- name: enable weave
   systemd:
     name: weave
     daemon_reload: True
     enabled: True
-    state: started
 
-- name: Restart weave
+- name: restart weave
   systemd:
     name: weave
-    state: restarted
+    state: "{{ weave_state }}"
