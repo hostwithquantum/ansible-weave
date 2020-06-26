@@ -1,0 +1,66 @@
+---
+# Hello, since you found this file, let me explain a few things:
+#
+# When Ansible's systemd module fails, it's hard to find output (Thank you, Ansible!).
+#
+# For example, Ansible will be extra cheeky and tell you to check `systemctl status unit`
+# and `journal -xe`, but what gives.
+#
+# You need to do it yourself, which means: log into the server.
+#
+# But what if you can, or you're not supposed to. Or you're getting the failure in CI?
+#
+# Apparently no one ever thought of that! Which begs the question, is anyone using Ansible
+# in production? (Don't answer.) And whatever you end up doing, you have to spend even more
+# time.
+#
+# So yeah, here we go — attempting to fix this a little (with even more YAML):
+#
+# We can include this file using include_tasks from the handler file. (Yes, that is possible)
+#
+# And here we run our usual commands, to get output and debug like there is no tomorrow.
+#
+# This also opens up the possibility to run a bunch of commands on notify, not just one, or
+# to build an obscure chain of handlers. Yay!
+- name: Try to restart
+  command: systemctl start weave
+  args:
+    warn: False
+  register: systemd_weave_start
+  ignore_errors: True
+  tags:
+    - skip_ansible_lint
+- name: Show start
+  debug:
+    var: systemd_weave_start
+- name: Show status
+  command: systemctl status weave
+  args:
+    warn: False
+  ignore_errors: True
+  register: systemd_weave_status
+  tags:
+    - skip_ansible_lint
+- name: Show status
+  debug:
+    var: systemd_weave_status
+- name: Get journal
+  command: journalctl -xe --since "2 minute ago" --no-pager
+  args:
+    warn: False
+  register: journal
+  tags:
+    - skip_ansible_lint
+- name: Show journal
+  debug:
+    var: journal
+- name: Get Docker info
+  command: docker info
+  args:
+    warn: False
+  register: docker_info
+  tags:
+    - skip_ansible_lint
+- name: Show docker info
+  debug:
+    var: docker_info

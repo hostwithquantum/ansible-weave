@@ -5,6 +5,8 @@
     # install a docker in docker
     - role: atosatto.docker-swarm
       vars:
+        docker_daemon_config:
+          storage-driver: vfs
         docker_service_override: |
           [Service]
           ExecStart=

@@ -1,23 +1,7 @@
 ---
-# - name: "Show current node group"
-#   debug:
-#     var: __weave_node
-
-# - name: "Show all in group '{{ weave_inventory_group }}'"
-#   debug:
-#     var: __weave_group
-
-- name: Launch args
-  debug:
-    var: weave_launch_args
-
 - name: Create peers
   set_fact:
     __weave_peers: "{{ __weave_group | difference(__weave_node) | list }}"
-
-# - name: "Show peers of host '{{ inventory_hostname }}'"
-#   debug:
-#     msg: "{{ __weave_peers }}"
 
 - name: Get IPs from inventory
   set_fact:
