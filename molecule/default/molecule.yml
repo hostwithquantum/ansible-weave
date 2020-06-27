@@ -3,8 +3,6 @@ dependency:
   name: galaxy
 driver:
   name: docker
-lint:
-  name: yamllint
 platforms:
   - name: node1
     image: geerlingguy/docker-centos7-ansible:latest
@@ -26,6 +24,9 @@ platforms:
       - weave
 provisioner:
   name: ansible
+  options:
+    diff: true
+    v: true
   inventory:
     host_vars:
       node1:
@@ -40,9 +41,7 @@ provisioner:
           - "--log-level=debug"
           - "--dns-domain=\"mesh.local.\""
           - "--dns-ttl=10"
-  # lint:
-  #  name: ansible-lint
 verifier:
   name: testinfra
-  lint:
-    name: flake8
+  options:
+    vvv: true
