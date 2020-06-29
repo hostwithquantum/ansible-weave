@@ -1,4 +1,5 @@
 galaxy_info:
+  role_name: weave
   author: Till Klampaeckel
   description: The role will install weave on each host and create a network between them.
   company: Planetary Quantum GmbH
